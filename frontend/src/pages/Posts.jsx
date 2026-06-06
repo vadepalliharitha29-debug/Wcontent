@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import { Plus, Trash2, Sparkles, Check, X, FileEdit } from 'lucide-react';
 
@@ -20,7 +21,7 @@ const Posts = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await authFetch('http://127.0.0.1:8000/api/posts/');
+      const response = await authFetch(`${API_BASE_URL}/api/posts/`);
       if (response.ok) {
         const data = await response.json();
         setPosts(data);
@@ -42,7 +43,7 @@ const Posts = () => {
     setSubmitLoading(true);
 
     try {
-      const response = await authFetch('http://127.0.0.1:8000/api/posts/', {
+      const response = await authFetch(`${API_BASE_URL}/api/posts/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title, content, status }),
@@ -71,7 +72,7 @@ const Posts = () => {
     if (!window.confirm('Are you sure you want to delete this publication draft?')) return;
 
     try {
-      const response = await authFetch(`http://127.0.0.1:8000/api/posts/${id}/`, {
+      const response = await authFetch(`${API_BASE_URL}/api/posts/${id}/`, {
         method: 'DELETE',
       });
       if (response.ok) {
@@ -88,7 +89,7 @@ const Posts = () => {
     setAiLoadingMap(prev => ({ ...prev, [id]: true }));
 
     try {
-      const response = await authFetch(`http://127.0.0.1:8000/api/posts/${id}/seo/`, {
+      const response = await authFetch(`${API_BASE_URL}/api/posts/${id}/seo/`, {
         method: 'POST',
       });
       const data = await response.json();

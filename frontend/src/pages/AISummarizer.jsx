@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import { Sparkles, BarChart, ArrowRight, MessageSquare, AlertCircle } from 'lucide-react';
 
@@ -34,7 +35,7 @@ const AISummarizer = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await auth.authFetch('http://127.0.0.1:8000/api/posts/');
+        const response = await auth.authFetch(`${API_BASE_URL}/api/posts/`);
         if (response.ok) {
           const data = await response.json();
           setPosts(data);
@@ -82,7 +83,7 @@ const AISummarizer = () => {
     setAiLoading(true);
 
     try {
-      const response = await auth.authFetch(`http://127.0.0.1:8000/api/posts/${selectedPostId}/comments-summary/`, {
+      const response = await auth.authFetch(`${API_BASE_URL}/api/posts/${selectedPostId}/comments-summary/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ comments: commentsList }),

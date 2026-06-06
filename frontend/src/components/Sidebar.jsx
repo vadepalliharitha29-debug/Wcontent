@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { API_BASE_URL } from '../config';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
@@ -19,7 +20,7 @@ const Sidebar = () => {
   useEffect(() => {
     const checkStatus = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/api/status/');
+        const response = await fetch(`${API_BASE_URL}/api/status/`);
         if (response.ok) {
           const data = await response.json();
           setDbStatus({

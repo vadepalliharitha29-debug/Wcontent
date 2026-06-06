@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import { 
   FileText, 
@@ -18,7 +19,7 @@ const Dashboard = () => {
   const fetchData = async () => {
     try {
       // 1. Fetch Posts from MySQL to get total count
-      const postRes = await authFetch('http://127.0.0.1:8000/api/posts/');
+      const postRes = await authFetch(`${API_BASE_URL}/api/posts/`);
       let postCount = 0;
       if (postRes.ok) {
         const posts = await postRes.json();
@@ -26,7 +27,7 @@ const Dashboard = () => {
       }
 
       // 2. Fetch Collaboration requests from MongoDB/JSON fallback
-      const collabRes = await authFetch('http://127.0.0.1:8000/api/collab/');
+      const collabRes = await authFetch(`${API_BASE_URL}/api/collab/`);
       let sentCount = 0;
       let receivedCount = 0;
       if (collabRes.ok) {
@@ -36,7 +37,7 @@ const Dashboard = () => {
       }
 
       // 3. Fetch notifications from MongoDB/JSON fallback
-      const notifRes = await authFetch('http://127.0.0.1:8000/api/notifications/');
+      const notifRes = await authFetch(`${API_BASE_URL}/api/notifications/`);
       let notifList = [];
       if (notifRes.ok) {
         notifList = await notifRes.json();
@@ -61,7 +62,7 @@ const Dashboard = () => {
 
   const handleMarkAllRead = async () => {
     try {
-      const response = await authFetch('http://127.0.0.1:8000/api/notifications/', {
+      const response = await authFetch(`${API_BASE_URL}/api/notifications/`, {
         method: 'PUT',
       });
       if (response.ok) {

@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import { API_BASE_URL } from '../config';
 
 // Create the Auth Context
 const AuthContext = createContext(null);
@@ -61,7 +62,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/auth/login/', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -82,7 +83,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (username, email, password, creatorType) => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/auth/register/', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -130,7 +131,7 @@ export const AuthProvider = ({ children }) => {
     // Handle token expiration: if 401, try to refresh
     if (response.status === 401 && tokens.refresh) {
       try {
-        const refreshResponse = await fetch('http://127.0.0.1:8000/api/auth/refresh/', {
+        const refreshResponse = await fetch(`${API_BASE_URL}/api/auth/refresh/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ refresh: tokens.refresh }),

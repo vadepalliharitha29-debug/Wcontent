@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
 import { Send, Check, X, Users, MessageSquare } from 'lucide-react';
 
@@ -19,7 +20,7 @@ const Collabs = () => {
 
   const fetchCollabs = async () => {
     try {
-      const response = await authFetch('http://127.0.0.1:8000/api/collab/');
+      const response = await authFetch(`${API_BASE_URL}/api/collab/`);
       if (response.ok) {
         const data = await response.json();
         setSentRequests(data.sent);
@@ -43,7 +44,7 @@ const Collabs = () => {
     setSubmitLoading(true);
 
     try {
-      const response = await authFetch('http://127.0.0.1:8000/api/collab/', {
+      const response = await authFetch(`${API_BASE_URL}/api/collab/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -73,7 +74,7 @@ const Collabs = () => {
 
   const handleUpdateStatus = async (id, newStatus) => {
     try {
-      const response = await authFetch(`http://127.0.0.1:8000/api/collab/${id}/status/`, {
+      const response = await authFetch(`${API_BASE_URL}/api/collab/${id}/status/`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),

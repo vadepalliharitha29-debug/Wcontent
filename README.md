@@ -16,7 +16,7 @@ This repository demonstrates modern software engineering patterns including **Hy
 ---
 
 ## 🛠️ Technology Stack
-*   **Backend**: Python, Django, Django REST Framework (DRF), SimpleJWT, PyMySQL, PyMongo, Pillow, python-dotenv
+*   **Backend**: Python, Django, Django REST Framework (DRF), SimpleJWT, PyMySQL, Pillow, python-dotenv
 *   **Frontend**: ReactJS, Vite, Vanilla CSS Variables, Lucide React
 *   **Databases**: MySQL, MongoDB Atlas (Cloud)
 *   **AI Engine**: Google Gemini API (`google-genai` SDK)

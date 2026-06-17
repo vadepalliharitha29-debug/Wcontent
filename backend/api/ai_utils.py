@@ -6,30 +6,24 @@ from google.genai.errors import APIError
 logger = logging.getLogger(__name__)
 
 def get_gemini_client():
-    """
-    Initializes and returns the Google Gemini Client if the API key is set.
-    """
+    """Get Gemini client."""
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         logger.warning("GEMINI_API_KEY environment variable is not configured.")
         return None
     try:
-        # Create the client using the official Google GenAI SDK
         return genai.Client(api_key=api_key)
     except Exception as e:
         logger.error(f"Failed to initialize Gemini Client: {e}")
         return None
 
 def generate_seo_title(post_content):
-    """
-    Calls Google Gemini to generate an SEO title recommendation based on article content.
-    """
+    """Generate SEO title suggestion using Gemini."""
     client = get_gemini_client()
     if not client:
         return "Gemini API key not configured. Please add it to your backend/.env file."
 
     try:
-        # Structured Prompting: We instruct the LLM to output ONLY the title to keep it clean.
         prompt = (
             "You are an SEO expert. Analyze the following content draft and recommend a single, "
             "highly engaging, search-engine-optimized, click-worthy article title. "
@@ -52,9 +46,7 @@ def generate_seo_title(post_content):
         return "AI Generation failed due to an internal server error."
 
 def summarize_comments(comments_list):
-    """
-    Calls Google Gemini to analyze user comments and summarize them into key feedback points.
-    """
+    """Summarize comments using Gemini."""
     client = get_gemini_client()
     if not client:
         return "Gemini API key not configured. Please add it to your backend/.env file."
@@ -63,7 +55,6 @@ def summarize_comments(comments_list):
         return "No comments have been posted yet to summarize."
 
     try:
-        # Join the list of comments into a single string block
         comments_block = "\n".join([f"- {comment}" for comment in comments_list])
         
         prompt = (

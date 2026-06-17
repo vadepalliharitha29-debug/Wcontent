@@ -9,14 +9,14 @@ const Posts = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   
-  // Form states for creating a new post
+  // form states
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [status, setStatus] = useState('Draft');
   const [formError, setFormError] = useState('');
   const [submitLoading, setSubmitLoading] = useState(false);
   
-  // AI Generation Loading state
+  // AI states
   const [aiLoadingMap, setAiLoadingMap] = useState({});
 
   const fetchPosts = async () => {
@@ -83,9 +83,7 @@ const Posts = () => {
     }
   };
 
-  // Triggers Gemini SEO Title generation
   const handleGenerateSEOTitle = async (id) => {
-    // Set loading for this specific post id
     setAiLoadingMap(prev => ({ ...prev, [id]: true }));
 
     try {
@@ -95,7 +93,7 @@ const Posts = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Update the post list state locally to reflect the suggestion
+        // update local list
         setPosts(prev => prev.map(post => {
           if (post.id === id) {
             return { ...post, seo_title_suggestion: data.seo_title_suggestion };
@@ -146,7 +144,6 @@ const Posts = () => {
                 <h3 className="post-title">{post.title}</h3>
                 <p className="post-body-preview">{post.content}</p>
                 
-                {/* Display Gemini Suggestion if available */}
                 {post.seo_title_suggestion ? (
                   <div className="ai-section">
                     <div className="ai-title">
@@ -183,7 +180,6 @@ const Posts = () => {
         </div>
       )}
 
-      {/* CREATE POST MODAL DIALOG */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">

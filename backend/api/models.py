@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-# 1. UserProfile Model (relational data in MySQL)
+# UserProfile Model
 class UserProfile(models.Model):
     CREATOR_CHOICES = [
         ('video', 'Video Creator'),
@@ -24,7 +24,7 @@ class UserProfile(models.Model):
         return f"{self.user.username}'s Profile"
 
 
-# 2. Post Model (relational data in MySQL)
+# Post Model
 class Post(models.Model):
     STATUS_CHOICES = [
         ('Draft', 'Draft'),
@@ -37,7 +37,7 @@ class Post(models.Model):
     content = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Draft')
     
-    # These will be populated by the Google Gemini AI
+    # Gemini suggestions
     seo_title_suggestion = models.CharField(max_length=250, blank=True, default='')
     comments_summary = models.TextField(blank=True, default='')
     
@@ -48,21 +48,13 @@ class Post(models.Model):
         return self.title
 
 
-# ----------------------------------------------------
-# SIGNALS: Auto-create UserProfile when a User is made
-# ----------------------------------------------------
+# Signals to handle profile creation/updates
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
-    """
-    Automatically creates a UserProfile object when a new Django User is saved.
-    This guarantees that every user has an associated profile record.
-    """
     if created:
         UserProfile.objects.create(user=instance)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    """
-    Saves the user profile whenever the user object is updated.
-    """
     instance.profile.save()
+

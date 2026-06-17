@@ -3,13 +3,13 @@ from django.contrib.auth.models import User
 from .models import UserProfile, Post
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-# 1. Custom JWT Serializer (To inject user profile metadata into token payload)
+# Custom JWT Serializer to add profile info to token
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
 
-        # Inject custom user details into the token payload
+        # Custom claims
         token['username'] = user.username
         token['email'] = user.email
         token['bio'] = user.profile.bio
@@ -24,10 +24,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
     def validate(self, attrs):
-        # Retrieve default token dictionary (access & refresh tokens)
         data = super().validate(attrs)
         
-        # Inject profile details directly into response body for initial login speed
+        # Include profile details in auth response
         data['username'] = self.user.username
         data['email'] = self.user.email
         data['creator_type'] = self.user.profile.creator_type
@@ -42,7 +41,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return data
 
 
-# 2. User Profile Serializer
+# User Profile Serializer
 class UserProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
     email = serializers.CharField(source='user.email', read_only=True)
@@ -52,7 +51,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'bio', 'creator_type', 'portfolio_url', 'profile_picture', 'created_at']
 
 
-# 3. User Registration Serializer
+# User Registration Serializer
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
     creator_type = serializers.ChoiceField(choices=UserProfile.CREATOR_CHOICES, write_only=True, required=False)
@@ -64,14 +63,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         creator_type = validated_data.pop('creator_type', 'other')
         
-        # Create standard Django User instance (hashes password automatically)
+        # Create django user
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data.get('email', ''),
             password=validated_data['password']
         )
         
-        # Django Signal automatically created the UserProfile, let's fetch it and update creator_type
+        # Update profile creator type
         profile = user.profile
         profile.creator_type = creator_type
         profile.save()
@@ -79,7 +78,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 
-# 4. Post Serializer
+# Post Serializer
 class PostSerializer(serializers.ModelSerializer):
     author_username = serializers.CharField(source='author.username', read_only=True)
 
@@ -91,3 +90,4 @@ class PostSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at'
         ]
         read_only_fields = ['author', 'seo_title_suggestion', 'comments_summary']
+

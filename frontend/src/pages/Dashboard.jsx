@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   const fetchData = async () => {
     try {
-      // 1. Fetch Posts from MySQL to get total count
+      // fetch posts
       const postRes = await authFetch(`${API_BASE_URL}/api/posts/`);
       let postCount = 0;
       if (postRes.ok) {
@@ -26,7 +26,7 @@ const Dashboard = () => {
         postCount = posts.length;
       }
 
-      // 2. Fetch Collaboration requests from MongoDB/JSON fallback
+      // fetch collabs
       const collabRes = await authFetch(`${API_BASE_URL}/api/collab/`);
       let sentCount = 0;
       let receivedCount = 0;
@@ -36,7 +36,7 @@ const Dashboard = () => {
         receivedCount = collabData.received.length;
       }
 
-      // 3. Fetch notifications from MongoDB/JSON fallback
+      // fetch notifications
       const notifRes = await authFetch(`${API_BASE_URL}/api/notifications/`);
       let notifList = [];
       if (notifRes.ok) {
@@ -66,7 +66,7 @@ const Dashboard = () => {
         method: 'PUT',
       });
       if (response.ok) {
-        // Refresh notifications list locally
+        // mark as read
         setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
       }
     } catch (error) {
@@ -96,7 +96,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Grid of key statistics */}
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon">
@@ -129,9 +128,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Two-column Layout: Feed and Quick Actions */}
       <div className="dash-layout-grid">
-        {/* Left Side: Notifications Feed (Dynamic MongoDB storage) */}
         <div className="panel-card">
           <div className="panel-card-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -183,7 +180,6 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* Right Side: Creator Quick Info Box */}
         <div className="panel-card">
           <div className="panel-card-title">
             <Sparkles size={20} color="#d946ef" />

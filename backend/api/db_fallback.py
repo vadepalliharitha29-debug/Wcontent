@@ -35,11 +35,10 @@ class ResilientMongoStore:
             self._init_fallback_file()
 
     def is_using_fallback(self):
-        """Returns True if the system is operating in JSON offline mode, False if using MongoDB."""
         return self.use_fallback
 
     def _init_fallback_file(self):
-        """Initializes the fallback JSON file if it does not exist."""
+        # Create empty fallback file if missing
         if not os.path.exists(FALLBACK_FILE_PATH):
             default_data = {
                 "collaboration_requests": [],
@@ -49,7 +48,6 @@ class ResilientMongoStore:
                 json.dump(default_data, f, indent=4)
 
     def _read_fallback_data(self):
-        """Reads database records from fallback JSON file."""
         self._init_fallback_file()
         try:
             with open(FALLBACK_FILE_PATH, 'r') as f:
@@ -58,22 +56,17 @@ class ResilientMongoStore:
             return {"collaboration_requests": [], "notifications": []}
 
     def _write_fallback_data(self, data):
-        """Writes database records back to fallback JSON file."""
         try:
             with open(FALLBACK_FILE_PATH, 'w') as f:
                 json.dump(data, f, indent=4)
             return True
         except Exception as e:
-            logger.error(f"Error writing to fallback file: {e}")
+            logger.error(f"Error writing to file: {e}")
             return False
 
     def insert_document(self, collection_name, document):
-        """
-        Inserts a new document. If MongoDB is offline, inserts into local JSON.
-        Returns the inserted document ID (string).
-        """
         document = dict(document)
-        # Ensure created_at timestamp is standard string format for JSON compatibility
+        # format timestamp for JSON compatibility
         if 'created_at' in document and isinstance(document['created_at'], datetime):
             document['created_at'] = document['created_at'].isoformat()
         elif 'created_at' not in document:
@@ -103,9 +96,6 @@ class ResilientMongoStore:
         return doc_id
 
     def get_documents(self, collection_name, query_filter=None):
-        """
-        Retrieves all documents matching a simple key-value query filter.
-        """
         if not self.use_fallback:
             try:
                 collection = self.db[collection_name]
@@ -142,9 +132,6 @@ class ResilientMongoStore:
         return filtered_records
 
     def update_document(self, collection_name, doc_id, update_dict):
-        """
-        Updates a document matching a string ID.
-        """
         if not self.use_fallback:
             try:
                 # pyrefly: ignore [missing-import]

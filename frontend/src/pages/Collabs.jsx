@@ -10,7 +10,7 @@ const Collabs = () => {
   const [receivedRequests, setReceivedRequests] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Form states for sending request
+  // form states
   const [recipient, setRecipient] = useState('');
   const [message, setMessage] = useState('');
   const [projectDetails, setProjectDetails] = useState('');
@@ -102,7 +102,6 @@ const Collabs = () => {
       </div>
 
       <div className="dash-layout-grid" style={{ gridTemplateColumns: '1.2fr 1fr' }}>
-        {/* Left column: Manage collaboration requests (sent/received tabs) */}
         <div>
           <div className="collab-tabs">
             <div 
@@ -122,7 +121,6 @@ const Collabs = () => {
           {loading ? (
             <div style={{ color: '#9ca3af' }}>Loading requests...</div>
           ) : activeTab === 'received' ? (
-            // RECEIVED PROPOSALS FEED
             receivedRequests.length === 0 ? (
               <div className="panel-card" style={{ textAlign: 'center', color: '#9ca3af', padding: '40px 0' }}>
                 <Users size={32} color="#4b5563" style={{ marginBottom: '10px' }} />
@@ -145,7 +143,6 @@ const Collabs = () => {
                       </div>
                     )}
                     
-                    {/* Render action buttons if request is pending */}
                     {req.status === 'Pending' && (
                       <div className="collab-actions">
                         <button 
@@ -169,7 +166,6 @@ const Collabs = () => {
               </div>
             )
           ) : (
-            // SENT REQUESTS FEED
             sentRequests.length === 0 ? (
               <div className="panel-card" style={{ textAlign: 'center', color: '#9ca3af', padding: '40px 0' }}>
                 <Send size={32} color="#4b5563" style={{ marginBottom: '10px' }} />
@@ -198,7 +194,6 @@ const Collabs = () => {
           )}
         </div>
 
-        {/* Right column: Create a new proposal request */}
         <div>
           <div className="panel-card">
             <h2 className="panel-card-title">
